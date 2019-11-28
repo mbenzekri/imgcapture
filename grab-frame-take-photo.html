@@ -1,0 +1,52 @@
+
+<html>
+<header>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="Sample illustrating the use of Image Capture / Grab Frame - Take Photo.">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <title>Image Capture / Grab Frame - Take Photo Sample</title>
+    <script>
+      // Add a global error event listener early on in the page load, to help ensure that browsers
+      // which don't support specific functionality still end up displaying a meaningful message.
+      window.addEventListener('error', function(error) {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          console.error(error);
+          error.preventDefault();
+        }
+      });
+    </script>
+    <link rel="stylesheet" href="grab-frame-take-photo.css">
+
+</header>
+<body>
+    <h3>Background</h3>
+    <p>The ImageCapture Web API allows web developers to capture images from camera
+    in the form of a Blob with <code>takePhoto()</code> or as a ImageBitmap with
+    <code>grabFrame()</code>.</p>
+    
+    <div id='results'>
+      <div>
+        <video autoplay></video>
+        <button id='getUserMediaButton'>Get User Media</button>
+      </div>
+      <div>
+        <canvas id='grabFrameCanvas'></canvas>
+        <button id='grabFrameButton' disabled>Grab Frame</button>
+      </div>
+      <div>
+        <canvas id='takePhotoCanvas'></canvas>
+        <button id='takePhotoButton' disabled>Take Photo</button>
+      </div>
+    </div>
+    <script type="text/javascript" src="grab-frame-take-photo.js"></script>
+    <script>
+      document.querySelector('#getUserMediaButton').addEventListener('click', onGetUserMediaButtonClick);
+      document.querySelector('#grabFrameButton').addEventListener('click', onGrabFrameButtonClick);
+      document.querySelector('#takePhotoButton').addEventListener('click', onTakePhotoButtonClick);
+    </script>
+</body>
+
+</html>
+
