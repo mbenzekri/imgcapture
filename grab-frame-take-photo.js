@@ -3,12 +3,28 @@ var imageCapture;
 function onGetUserMediaButtonClick() {
   navigator.mediaDevices.getUserMedia({video: true})
   .then(mediaStream => {
+    const desc = `
+    <p>MediaStream :</p>
+    <p>id: ${mediaStream.id}</p>
+    <p>ended: ${mediaStream.ended}</p>
+    <p>tracks: ${mediaStream.getVideoTracks().length}</p>
+    `+
+    mediaStream.getVideoTracks().map(track => `
+        <p>   MediaStreamTrack</p>
+        <p>   id: ${track.id}</p>
+        <p>   label: ${track.label}</p>
+        <p>   enabled: ${track.enabled}</p>
+        <p>   readystate: ${track.readystate}</p>
+        <p>   sourceId: ${track.sourceId}</p>
+        <p>   sourceType: ${track.sourceType}</p>
+    `).join()
+    document.querySelector('#videodiv').innerHTML = desc;
     document.querySelector('video').srcObject = mediaStream;
 
     const track = mediaStream.getVideoTracks()[0];
     imageCapture = new ImageCapture(track);
   })
-  .catch(error => ChromeSamples.log(error));
+  .catch(error => console.log(error));
 }
 
 function onGrabFrameButtonClick() {
