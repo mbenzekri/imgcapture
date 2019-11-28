@@ -1,12 +1,12 @@
 #results {
     display: flex;
-    align-items: center;
+    align-items: normal;
     justify-content: center;
   }
   
   #results > div {
     width: 33%;
-    text-align: center;
+    text-align: left;
     line-height: 24px;
   }
   

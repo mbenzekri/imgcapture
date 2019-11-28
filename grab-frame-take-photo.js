@@ -1,30 +1,41 @@
 var imageCapture;
+const model  = {
+    MediaStream : ['id','active','ended'],
+    MediaStreamTrack : ['contentHint','enabled','id','kind','label','muted'],
+    PhotoCapabilities : ['fillLightMode','imageHeight','imageWidth','redEyeReduction'],
+    MediaSettingsRange : ['max','min','step'],
+    ImageBitmap : ['width','height'],
+    Blob : []
+}
+function proplist(obj,i) {
+    const label = (obj.constructor && obj.constructor.name) || obj.prototype.name
+    const keys = model[label]
+    return `<ul><u>${label}${(i===undefined) ? '' : '['+i+']'}</u>` + 
+        keys.map(prop => {
+            if (Array.isArray(obj[prop])) return obj[prop].map((obji,i) => proplist(obji,i)).join('')
+            if (typeof obj[prop] === 'object') return proplist(obj[prop])
+            return `<li>${prop} : ${typeof obj[prop] === 'object'? proplist(obj[prop]) :  obj[prop]}</li>`
+        }).join('')+
+        '</ul>'
+}
 
 function onGetUserMediaButtonClick() {
   navigator.mediaDevices.getUserMedia({video: true})
   .then(mediaStream => {
-    const desc = `
-    <p>MediaStream :</p>
-    <p>id: ${mediaStream.id}</p>
-    <p>ended: ${mediaStream.ended}</p>
-    <p>tracks: ${mediaStream.getVideoTracks().length}</p>
-    `+
-    mediaStream.getVideoTracks().map(track => `
-        <p>   MediaStreamTrack</p>
-        <p>   id: ${track.id}</p>
-        <p>   label: ${track.label}</p>
-        <p>   enabled: ${track.enabled}</p>
-        <p>   readystate: ${track.readystate}</p>
-        <p>   sourceId: ${track.sourceId}</p>
-        <p>   sourceType: ${track.sourceType}</p>
-    `).join()
-    document.querySelector('#videodiv').innerHTML = desc;
+    let desc = proplist(mediaStream,'MediaStream')
+    let tracks = mediaStream.getVideoTracks()
+    desc+=tracks.map((track,i)  => proplist(track,i)).join('')
     document.querySelector('video').srcObject = mediaStream;
 
     const track = mediaStream.getVideoTracks()[0];
     imageCapture = new ImageCapture(track);
+    
+    imageCapture.getPhotoCapabilities().then(photocap => {
+        desc+= proplist(photocap)    
+        document.querySelector('#videodiv').innerHTML = desc;
+    })
   })
-  .catch(error => console.log(error));
+  .catch(console.error);
 }
 
 function onGrabFrameButtonClick() {
@@ -32,8 +43,9 @@ function onGrabFrameButtonClick() {
   .then(imageBitmap => {
     const canvas = document.querySelector('#grabFrameCanvas');
     drawCanvas(canvas, imageBitmap);
+    document.querySelector('#framediv').innerHTML = proplist(imageBitmap)
   })
-  .catch(error => ChromeSamples.log(error));
+  .catch(console.error);
 }
 
 function onTakePhotoButtonClick() {
@@ -42,8 +54,9 @@ function onTakePhotoButtonClick() {
   .then(imageBitmap => {
     const canvas = document.querySelector('#takePhotoCanvas');
     drawCanvas(canvas, imageBitmap);
+    document.querySelector('#photodiv').innerHTML = proplist(imageBitmap)
   })
-  .catch(error => ChromeSamples.log(error));
+  .catch(console.error);
 }
 
 /* Utils */
