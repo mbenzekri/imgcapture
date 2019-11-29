@@ -29,7 +29,8 @@
     <div id='results'>
       <div>
         <video autoplay></video>
-        <button id='getUserMediaButton'>Get User Media</button>
+        <button id='getUserMediaButton_front'>Get User Media Front</button>
+        <button id='getUserMediaButton_back'>Get User Media Back</button>
         <div id="videodiv"></div>
       </div>
       <div>
@@ -45,7 +46,8 @@
     </div>
     <script type="text/javascript" src="grab-frame-take-photo.js"></script>
     <script>
-      document.querySelector('#getUserMediaButton').addEventListener('click', onGetUserMediaButtonClick);
+      document.querySelector('#getUserMediaButton_front').addEventListener('click', onGUMBC_front);
+      document.querySelector('#getUserMediaButton_back').addEventListener('click', onGUMBC_back);
       document.querySelector('#grabFrameButton').addEventListener('click', onGrabFrameButtonClick);
       document.querySelector('#takePhotoButton').addEventListener('click', onTakePhotoButtonClick);
     </script>
