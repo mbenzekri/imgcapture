@@ -21,9 +21,9 @@ function proplist(obj, label) {
         case 'String':
         case 'Boolean':
         case 'Date':
-            return `${title} : ${obj}`
+            return `<li>${title} : ${obj}</li>`
         default:
-            return `${title} : <ul>` + keys.map((prop, i) => `<li>${proplist(obj[prop], prop)}</li>`).join('')+'</ul>'
+            return `<li>${title} : <ul>` + keys.map((prop, i) => `${proplist(obj[prop], prop)}`).join('')+'</ul></li>'
     }
 }
 function onGUMBC_front() {
@@ -68,18 +68,25 @@ function onGrabFrameButtonClick() {
         .then(imageBitmap => {
             const canvas = document.querySelector('#grabFrameCanvas');
             drawCanvas(canvas, imageBitmap);
-            document.querySelector('#framediv').innerHTML = proplist(imageBitmap,'bitmap')
+            canvas.toBlob(blob => {
+                document.querySelector('#framediv').innerHTML = proplist(blob,'blob') + proplist(imageBitmap,'bitmap')
+            })
         })
         .catch(err => document.querySelector('#framediv').innerHTML = err.toString());
 }
 
 function onTakePhotoButtonClick() {
+    let desc = ''
     imageCapture.takePhoto()
-        .then(blob => createImageBitmap(blob))
+        .then(blob => {
+            desc+= proplist(blob,'blob') 
+            return createImageBitmap(blob)
+        })
         .then(imageBitmap => {
             const canvas = document.querySelector('#takePhotoCanvas');
             drawCanvas(canvas, imageBitmap);
-            document.querySelector('#photodiv').innerHTML = proplist(imageBitmap,'photo')
+            desc += proplist(imageBitmap,'photo')
+            document.querySelector('#photodiv').innerHTML = desc
         })
         .catch(err => document.querySelector('#photodiv').innerHTML = err.toString());
 }
