@@ -86,7 +86,7 @@ function onBarcodeClick() {
         interval = setInterval(_ => {
             imageCapture.grabFrame()
                 .then(imageBitmap => detector.detect(imageBitmap))
-                .then(code => detected.value = code)
+                .then(barcode => detected.value = barcode.rawData)
                 .catch(err => document.querySelector('#framediv').innerHTML = err.message);
         },500)
     }
