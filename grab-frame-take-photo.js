@@ -75,6 +75,23 @@ function onGrabFrameButtonClick() {
         .catch(err => document.querySelector('#framediv').innerHTML = err.toString());
 }
 
+let interval = null
+const detector = new BarcodeDetector()
+function onBarcodeClick() {
+    const detected = document.querySelector('#detectedBarcode')
+    if (interval) {
+        clearInterval(interval)
+        interval = null
+    } else {
+        interval = setInterval(_ => {
+            imageCapture.grabFrame()
+                .then(imageBitmap => detector.detect(imageBitmap))
+                .then(code => detected.value = code)
+                .catch(err => document.querySelector('#framediv').innerHTML = err.message);
+        },500)
+    }
+}
+
 function onTakePhotoButtonClick() {
     let desc = ''
     imageCapture.takePhoto()
@@ -107,4 +124,5 @@ function drawCanvas(canvas, img) {
 document.querySelector('video').addEventListener('play', function () {
     document.querySelector('#grabFrameButton').disabled = false;
     document.querySelector('#takePhotoButton').disabled = false;
+    document.querySelector('#barcodeButton').disabled = false;
 });

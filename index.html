@@ -31,11 +31,14 @@
         <video autoplay></video>
         <button id='getUserMediaButton_front'>Get User Media Front</button>
         <button id='getUserMediaButton_back'>Get User Media Back</button>
+        <button id='barcodeButton' disabled>Scan barcode stop/start</button>
+        <input id='detectedBarcode' type=text />
         <div id="videodiv"></div>
       </div>
       <div>
         <canvas id='grabFrameCanvas'></canvas>
         <button id='grabFrameButton' disabled>Grab Frame</button>
+
         <div id="framediv"></div>
       </div>
       <div>
@@ -50,6 +53,7 @@
       document.querySelector('#getUserMediaButton_back').addEventListener('click', onGUMBC_back);
       document.querySelector('#grabFrameButton').addEventListener('click', onGrabFrameButtonClick);
       document.querySelector('#takePhotoButton').addEventListener('click', onTakePhotoButtonClick);
+      document.querySelector('#barcodeButton').addEventListener('click', onBarcodeClick);
     </script>
 </body>
 
